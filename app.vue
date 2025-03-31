@@ -3,7 +3,7 @@
     <header class="bg-blue-600 text-white py-4 shadow-lg">
       <div class="container mx-auto px-4 flex justify-between items-center">
         <div>
-          <h1 class="text-2xl font-bold">欢迎来到 CoinAnalyzer</h1>
+          <h1 class="text-2xl font-bold">欢迎来到分析启航家</h1>
           <p class="mt-1 text-blue-100 text-sm">专业的数据分析平台</p>
         </div>
         <NuxtLink 
