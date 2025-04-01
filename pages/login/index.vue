@@ -1,24 +1,39 @@
 <script setup>
 const email = ref('')
 const password = ref('')
+const captcha = ref('')
+const captchaToken = ref('')
 const router = useRouter()
 const auth = useAuth()
 
-onMounted(() => {
+const refreshCaptcha = async () => {
+  const { data } = await useFetch('/api/auth/captcha', {
+    onResponse({ response }) {
+      captchaToken.value = response.headers.get('x-captcha-token')
+    }
+  })
+}
+
+onMounted(async () => {
   if (auth.isAuthenticated) {
     return navigateTo('/')
   }
+  await refreshCaptcha()
 })
 
 const handleLogin = async () => {
   try {
       await auth.login({ 
         email: email.value, 
-        password: password.value
+        password: password.value,
+        captcha: captcha.value,
+        captchaToken: captchaToken.value
       })
-    return navigateTo('/')
+      await refreshCaptcha()
+      return navigateTo('/')
   } catch (error) {
     console.error('登录失败:', error)
+    await refreshCaptcha()
   }
 }
 </script>
@@ -35,9 +50,9 @@ const handleLogin = async () => {
           </h2>
         </div>
         <form class="space-y-6" @submit.prevent="handleLogin">
-          <div class="space-y-4">
+          <div class="space-y-6">
             <div>
-              <label for="username" class="sr-only">用户名</label>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
               <input
                 id="email"
                 v-model="email"
@@ -45,12 +60,12 @@ const handleLogin = async () => {
                 type="email"
                 autocomplete="email"
                 required
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="邮箱"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                placeholder="请输入邮箱"
               />
             </div>
             <div>
-              <label for="password" class="sr-only">密码</label>
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
               <input
                 id="password"
                 v-model="password"
@@ -58,17 +73,42 @@ const handleLogin = async () => {
                 type="password"
                 autocomplete="current-password"
                 required
-                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="密码"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                placeholder="请输入密码"
               />
+            </div>
+            <div>
+              <label for="captcha" class="block text-sm font-medium text-gray-700 mb-1">验证码</label>
+              <div class="flex space-x-3 items-center">
+                <input
+                  id="captcha"
+                  v-model="captcha"
+                  name="captcha"
+                  type="text"
+                  required
+                  class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                  placeholder="验证码"
+                />
+                <div class="relative">
+                  <img 
+                    :src="`/api/auth/captcha?token=${captchaToken}`" 
+                    @click="refreshCaptcha"
+                    class="h-12 w-32 border border-gray-300 rounded-lg cursor-pointer hover:opacity-80 transition"
+                    alt="验证码"
+                  />
+                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="w-full h-full border-2 border-transparent hover:border-blue-200 rounded-lg transition-all duration-200"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
   
-          <div class="flex space-x-4">
+          <div class="space-y-4">
             <button
               type="submit"
               :disabled="auth.loading"
-              class="w-full py-2 px-4 border border-transparent rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:opacity-70 disabled:cursor-not-allowed"
             >
               <span v-if="auth.loading">登录中...</span>
               <span v-else>登录</span>
@@ -76,9 +116,9 @@ const handleLogin = async () => {
             <button
               type="button"
               @click="navigateTo('/register')"
-              class="w-full py-2 px-4 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="w-full py-3 px-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
             >
-              注册
+              注册账号
             </button>
           </div>
         </form>
