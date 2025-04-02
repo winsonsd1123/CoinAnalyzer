@@ -39,8 +39,8 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-      <div class="w-full max-w-sm p-8 bg-white rounded-lg shadow-md">
+    <div class="container mx-auto px-4 py-12">
+      <div class="w-full max-w-sm mx-auto p-8 bg-white rounded-lg shadow-md">
         <div v-if="auth.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {{ auth.error }}
         </div>
