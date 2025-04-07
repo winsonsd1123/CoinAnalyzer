@@ -37,11 +37,37 @@
             </div>
           </div>
           <div class="hidden md:block">
-            <img
-              src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?ixlib=rb-1.2.1&auto=format&fit=crop&q=80"
-              alt="法律文书"
-              class="rounded-lg shadow-2xl object-cover h-96 w-full"
-            />
+            <div class="rounded-lg shadow-2xl bg-white p-4 h-96 w-full">
+              <svg viewBox="0 0 500 400" class="w-full h-full">
+                <!-- X轴 -->
+                <line x1="50" y1="350" x2="450" y2="350" stroke="#94a3b8" stroke-width="2" />
+                <!-- Y轴 -->
+                <line x1="50" y1="50" x2="50" y2="350" stroke="#94a3b8" stroke-width="2" />
+                <!-- 折线 -->
+                <polyline 
+                  points="100,300 200,150 300,200 400,100" 
+                  fill="none" 
+                  stroke="#3b82f6" 
+                  stroke-width="3"
+                />
+                <!-- 数据点 -->
+                <circle cx="100" cy="300" r="5" fill="#3b82f6" />
+                <circle cx="200" cy="150" r="5" fill="#3b82f6" />
+                <circle cx="300" cy="200" r="5" fill="#3b82f6" />
+                <circle cx="400" cy="100" r="5" fill="#3b82f6" />
+                <!-- X轴标签 -->
+                <text x="100" y="370" text-anchor="middle" class="text-sm">1月</text>
+                <text x="200" y="370" text-anchor="middle" class="text-sm">2月</text>
+                <text x="300" y="370" text-anchor="middle" class="text-sm">3月</text>
+                <text x="400" y="370" text-anchor="middle" class="text-sm">4月</text>
+                <!-- Y轴标签 -->
+                <text x="30" y="100" text-anchor="end" class="text-sm">220</text>
+                <text x="30" y="200" text-anchor="end" class="text-sm">170</text>
+                <text x="30" y="300" text-anchor="end" class="text-sm">120</text>
+                <!-- 标题 -->
+                <text x="250" y="30" text-anchor="middle" class="font-semibold">文书数量统计</text>
+              </svg>
+            </div>
           </div>
         </div>
       </div>
